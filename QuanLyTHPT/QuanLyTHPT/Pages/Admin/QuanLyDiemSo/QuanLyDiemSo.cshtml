@@ -1,0 +1,722 @@
+﻿@page
+@model QuanLyTHPT.Pages.Admin.QuanLyDiemSoModel
+@{
+    ViewData["Title"] = "Quản lý điểm số";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e90ff;
+        }
+
+        .main-content {
+            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #CFEBFC;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 28px;
+                color: #ff4500;
+            }
+
+            .header h2 {
+                margin: 5px 0 0 0;
+                font-size: 20px;
+                color: #1e90ff;
+            }
+
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .button-group-left,
+        .button-group-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            --color: #fff;
+            --color-hover: #fff;
+            padding: 8px 28px;
+            border-radius: 20px;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            color: var(--c, var(--color));
+            background: var(--b, var(--background));
+            transition: color .2s linear var(--c-d, .2s), background .3s linear var(--b-d, .2s);
+        }
+
+            .btn:not(.simple) {
+                &:before, &:after
+
+        {
+            content: '';
+            position: absolute;
+            background: var(--pb, var(--hover-back));
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200%;
+            border-radius: var(--br, 40%);
+            transform: translateY(var(--y, 50%));
+            transition: transform var(--d, .4s) ease-in var(--d-d, 0s), border-radius .5s ease var(--br-d, .08s);
+        }
+
+        &:after {
+            --pb: var(--hover-front);
+            --d: .44s;
+        }
+
+        }
+
+        .btn div {
+            z-index: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn.in:not(.out) {
+            --c: var(--color-hover);
+            --b: var(--background-hover);
+        }
+
+            .btn.in:not(.out):before,
+            .btn.in:not(.out):after {
+                --y: 0;
+                --br: 5%;
+            }
+
+            .btn.in:not(.out):after {
+                --br: 10%;
+                --d-d: .02s;
+            }
+
+        .btn-add {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-back {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+        }
+
+        .btn-submit {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-edit {
+            --background: #32cd32;
+            --background-hover: #28a428;
+            --hover-back: #2ea22e;
+            --hover-front: #4cd14c;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .btn-delete {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .filter-bar {
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .filter-bar form {
+                display: flex;
+                width: 100%;
+                align-items: center;
+            }
+
+            .filter-bar select,
+            .filter-bar input[type="text"] {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                font-size: 16px;
+                box-sizing: border-box;
+                width: 200px;
+            }
+
+            .filter-bar button {
+                --background: #1e90ff;
+                --background-hover: #1873cc;
+                --hover-back: #2a7cd9;
+                --hover-front: #4ca5ff;
+                padding: 8px 15px;
+                color: var(--c, var(--color));
+                background: var(--b, var(--background));
+            }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .table-container table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 12px 15px;
+                text-align: left;
+                font-size: 13px;
+            }
+
+            .table-container th {
+                background-color: #1a3c34;
+                color: white;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+            }
+
+            .table-container td {
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .table-container tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-container tr:hover {
+                background-color: #f5f5f5;
+                cursor: pointer;
+            }
+
+            .table-container th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            .table-container th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            .table-container tr:last-child td:first-child {
+                border-bottom-left-radius: 10px;
+            }
+
+            .table-container tr:last-child td:last-child {
+                border-bottom-right-radius: 10px;
+            }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 600px;
+            max-width: 90%;
+            position: relative;
+        }
+
+            .modal-content h2 {
+                margin-top: 0;
+                text-align: center;
+                color: #ff0000;
+            }
+
+            .modal-content p {
+                text-align: center;
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+            .modal-content form {
+                display: grid;
+                gap: 15px;
+            }
+
+            .modal-content label {
+                font-weight: bold;
+            }
+
+            .modal-content input,
+            .modal-content select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+
+        .score-row {
+            display: flex;
+            gap: 10px;
+        }
+
+            .score-row input {
+                width: 80px;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="header">
+            <h1>BỘ GIÁO DỤC & ĐÀO TẠO</h1>
+            <h2>CỔNG CỬ QUẢN LÝ ĐIỂM SỐ BẬC TRUNG HỌC PHỔ THÔNG</h2>
+        </div>
+
+        <div class="container">
+            @if (TempData["Message"] != null)
+            {
+                <div style="color: green; text-align: center; margin-bottom: 10px;">
+                    @TempData["Message"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div style="color: red; text-align: center; margin-bottom: 10px;">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <div class="button-row">
+                <div class="button-group-left">
+                    <form method="post">
+                        <button class="btn btn-back" asp-page-handler="Back">Quay lại trang chủ</button>
+                    </form>
+                </div>
+                <div class="button-group-right">
+                    <button class="btn btn-add" onclick="openAddDiemSoModal()">Nhập điểm vào hệ thống</button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <form method="post">
+                    <select name="maMonHocFilter" onchange="this.form.submit()">
+                        @{
+                            var monHocOptions = new Dictionary<int, string>
+                        {
+                        { 0, "Tất cả mã môn học" }
+                        };
+                            if (Model.MonHocList != null)
+                            {
+                                foreach (var monHoc in Model.MonHocList)
+                                {
+                                    monHocOptions[monHoc.MaMonHoc] = $"{monHoc.MaMonHoc} - {monHoc.TenMonHoc}";
+                                }
+                            }
+
+                            foreach (var option in monHocOptions)
+                            {
+                                if (Model.MaMonHocFilter == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <select name="khoiLopFilter" onchange="this.form.submit()">
+                        @{
+                            var khoiLopOptions = new Dictionary<string, string>
+                        {
+                        { "", "Tất cả khối lớp" },
+                        { "10", "Lớp 10" },
+                        { "11", "Lớp 11" },
+                        { "12", "Lớp 12" }
+                        };
+
+                            foreach (var option in khoiLopOptions)
+                            {
+                                if (Model.KhoiLopFilter == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <input type="text" name="idHocSinhFilter" placeholder="Mã học sinh..." value="@Model.IdHocSinhFilter" />
+                    <select name="hocKyFilter" onchange="this.form.submit()">
+                        @{
+                            var hocKyOptions = new Dictionary<int, string>
+                        {
+                        { 0, "Tất cả học kỳ" },
+                        { 1, "Học kỳ 1" },
+                        { 2, "Học kỳ 2" }
+                        };
+
+                            foreach (var option in hocKyOptions)
+                            {
+                                if (Model.HocKyFilter == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <button type="submit" class="btn" asp-page-handler="Filter">Lọc</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã môn học</th>
+                            <th>Tên môn học</th>
+                            <th>Mã học sinh</th>
+                            <th>Tên học sinh</th>
+                            <th>Lớp</th>
+                            <th>Học kỳ</th>
+                            <th>TX1</th>
+                            <th>TX2</th>
+                            <th>TX3</th>
+                            <th>TX4</th>
+                            <th>TX5</th>
+                            <th>GK</th>
+                            <th>Thi</th>
+                            <th>TB</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.DiemSoList != null && Model.DiemSoList.Any())
+                        {
+                            @foreach (var diemSo in Model.DiemSoList)
+                            {
+                                <tr>
+                                    <td>@diemSo.MaMonHoc</td>
+                                    <td>@diemSo.TenMonHoc</td>
+                                    <td>@diemSo.IdHocSinh</td>
+                                    <td>@diemSo.TenHocSinh</td>
+                                    <td>@diemSo.Lop</td>
+                                    <td>@diemSo.HocKy</td>
+                                    <td>@diemSo.DiemThuongXuyen1</td>
+                                    <td>@diemSo.DiemThuongXuyen2</td>
+                                    <td>@diemSo.DiemThuongXuyen3</td>
+                                    <td>@diemSo.DiemThuongXuyen4</td>
+                                    <td>@diemSo.DiemThuongXuyen5</td>
+                                    <td>@diemSo.DiemGiuaKy</td>
+                                    <td>@diemSo.DiemThi</td>
+                                    <td>@diemSo.DiemTB</td>
+                                    <td>
+                                        <button class="btn btn-edit" onclick="openEditDiemSoModal('@diemSo.MaMonHoc', '@diemSo.IdHocSinh', '@diemSo.Lop', '@diemSo.HocKy', '@diemSo.DiemThuongXuyen1', '@diemSo.DiemThuongXuyen2', '@diemSo.DiemThuongXuyen3', '@diemSo.DiemThuongXuyen4', '@diemSo.DiemThuongXuyen5', '@diemSo.DiemGiuaKy', '@diemSo.DiemThi')">Sửa</button>
+                                        <button class="btn btn-delete" onclick="openDeleteDiemSoModal('@diemSo.MaMonHoc', '@diemSo.IdHocSinh')">Xóa</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="15">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="addDiemSoModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddDiemSoModal()">×</span>
+                <h2>NHẬP ĐIỂM VÀO HỆ THỐNG</h2>
+                <p>Vui lòng nhập đầy đủ các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="AddDiemSo">
+                    <div>
+                        <label for="maMonHoc">Mã môn học:</label>
+                        <select id="maMonHoc" name="maMonHoc" required>
+                            <option value="" disabled selected>Chọn mã môn học</option>
+                            @if (Model.MonHocList != null)
+                            {
+                                @foreach (var monHoc in Model.MonHocList)
+                                {
+                                    <option value="@monHoc.MaMonHoc">@monHoc.MaMonHoc - @monHoc.TenMonHoc</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label for="idHocSinh">Mã học sinh:</label>
+                        <input type="number" id="idHocSinh" name="idHocSinh" required />
+                    </div>
+                    <div>
+                        <label for="lop">Khối, lớp:</label>
+                        <select id="lop" name="lop" required>
+                            <option value="" disabled selected>Chọn khối, lớp</option>
+                            <option value="10">Lớp 10</option>
+                            <option value="11">Lớp 11</option>
+                            <option value="12">Lớp 12</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="hocKy">Học kỳ:</label>
+                        <select id="hocKy" name="hocKy" required>
+                            <option value="" disabled selected>Chọn học kỳ</option>
+                            <option value="1">Học kỳ 1</option>
+                            <option value="2">Học kỳ 2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Điểm thường xuyên:</label>
+                        <div class="score-row">
+                            <input type="number" step="0.1" id="diemTX1" name="diemTX1" placeholder="TX1" required />
+                            <input type="number" step="0.1" id="diemTX2" name="diemTX2" placeholder="TX2" required />
+                            <input type="number" step="0.1" id="diemTX3" name="diemTX3" placeholder="TX3" required />
+                            <input type="number" step="0.1" id="diemTX4" name="diemTX4" placeholder="TX4" required />
+                            <input type="number" step="0.1" id="diemTX5" name="diemTX5" placeholder="TX5" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="diemGiuaKy">Điểm giữa kỳ:</label>
+                        <input type="number" step="0.1" id="diemGiuaKy" name="diemGiuaKy" required />
+                    </div>
+                    <div>
+                        <label for="diemThi">Điểm thi:</label>
+                        <input type="number" step="0.1" id="diemThi" name="diemThi" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Nhập điểm vào hệ thống</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="editDiemSoModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditDiemSoModal()">×</span>
+                <h2>SỬA ĐIỂM SỐ</h2>
+                <p>Vui lòng chỉnh sửa các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="EditDiemSo">
+                    <input type="hidden" id="editMaMonHoc" name="maMonHoc" />
+                    <input type="hidden" id="editIdHocSinh" name="idHocSinh" />
+                    <div>
+                        <label for="editLop">Khối, lớp:</label>
+                        <select id="editLop" name="lop" required>
+                            <option value="" disabled selected>Chọn khối, lớp</option>
+                            <option value="10">Lớp 10</option>
+                            <option value="11">Lớp 11</option>
+                            <option value="12">Lớp 12</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editHocKy">Học kỳ:</label>
+                        <select id="editHocKy" name="hocKy" required>
+                            <option value="" disabled selected>Chọn học kỳ</option>
+                            <option value="1">Học kỳ 1</option>
+                            <option value="2">Học kỳ 2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Điểm thường xuyên:</label>
+                        <div class="score-row">
+                            <input type="number" step="0.1" id="editDiemTX1" name="diemTX1" placeholder="TX1" required />
+                            <input type="number" step="0.1" id="editDiemTX2" name="diemTX2" placeholder="TX2" required />
+                            <input type="number" step="0.1" id="editDiemTX3" name="diemTX3" placeholder="TX3" required />
+                            <input type="number" step="0.1" id="editDiemTX4" name="diemTX4" placeholder="TX4" required />
+                            <input type="number" step="0.1" id="editDiemTX5" name="diemTX5" placeholder="TX5" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="editDiemGiuaKy">Điểm giữa kỳ:</label>
+                        <input type="number" step="0.1" id="editDiemGiuaKy" name="diemGiuaKy" required />
+                    </div>
+                    <div>
+                        <label for="editDiemThi">Điểm thi:</label>
+                        <input type="number" step="0.1" id="editDiemThi" name="diemThi" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Cập nhật điểm số</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="deleteDiemSoModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeleteDiemSoModal()">×</span>
+                <h2>XÓA ĐIỂM SỐ</h2>
+                <p>Xóa điểm số của học sinh</p>
+                <form method="post" asp-page-handler="DeleteDiemSo">
+                    <div>
+                        <label for="deleteMaMonHoc">Mã môn học:</label>
+                        <input type="number" id="deleteMaMonHoc" name="maMonHoc" required readonly />
+                    </div>
+                    <div>
+                        <label for="deleteIdHocSinh">Mã học sinh:</label>
+                        <input type="number" id="deleteIdHocSinh" name="idHocSinh" required readonly />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Xóa điểm số</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            Bản quyền © 2025 Nguyễn Văn Quốc
+        </div>
+    </div>
+
+    <script>
+        function openAddDiemSoModal() {
+            document.getElementById("addDiemSoModal").style.display = "flex";
+        }
+
+        function closeAddDiemSoModal() {
+            document.getElementById("addDiemSoModal").style.display = "none";
+        }
+
+        function openEditDiemSoModal(maMonHoc, idHocSinh, lop, hocKy, diemTX1, diemTX2, diemTX3, diemTX4, diemTX5, diemGiuaKy, diemThi) {
+            document.getElementById("editMaMonHoc").value = maMonHoc;
+            document.getElementById("editIdHocSinh").value = idHocSinh;
+            document.getElementById("editLop").value = lop;
+            document.getElementById("editHocKy").value = hocKy;
+            document.getElementById("editDiemTX1").value = diemTX1;
+            document.getElementById("editDiemTX2").value = diemTX2;
+            document.getElementById("editDiemTX3").value = diemTX3;
+            document.getElementById("editDiemTX4").value = diemTX4;
+            document.getElementById("editDiemTX5").value = diemTX5;
+            document.getElementById("editDiemGiuaKy").value = diemGiuaKy;
+            document.getElementById("editDiemThi").value = diemThi;
+            document.getElementById("editDiemSoModal").style.display = "flex";
+        }
+
+        function closeEditDiemSoModal() {
+            document.getElementById("editDiemSoModal").style.display = "none";
+        }
+
+        function openDeleteDiemSoModal(maMonHoc, idHocSinh) {
+            document.getElementById("deleteMaMonHoc").value = maMonHoc;
+            document.getElementById("deleteIdHocSinh").value = idHocSinh;
+            document.getElementById("deleteDiemSoModal").style.display = "flex";
+        }
+
+        function closeDeleteDiemSoModal() {
+            document.getElementById("deleteDiemSoModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var addDiemSoModal = document.getElementById("addDiemSoModal");
+            var editDiemSoModal = document.getElementById("editDiemSoModal");
+            var deleteDiemSoModal = document.getElementById("deleteDiemSoModal");
+            if (event.target == addDiemSoModal) {
+                addDiemSoModal.style.display = "none";
+            }
+            if (event.target == editDiemSoModal) {
+                editDiemSoModal.style.display = "none";
+            }
+            if (event.target == deleteDiemSoModal) {
+                deleteDiemSoModal.style.display = "none";
+            }
+        }
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', e => {
+                if (!button.classList.contains('out')) {
+                    button.classList.add('in');
+                }
+            });
+
+            button.addEventListener('mouseleave', e => {
+                if (button.classList.contains('in')) {
+                    button.classList.add('out');
+                    setTimeout(() => button.classList.remove('in', 'out'), 950);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

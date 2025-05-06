@@ -1,0 +1,14 @@
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\QuanLyTHPT.exe
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\appsettings.json
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\QuanLyTHPT.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\QuanLyTHPT.deps.json
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\QuanLyTHPT.runtimeconfig.json
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\QuanLyTHPT.pdb
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\Microsoft.Data.Sqlite.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\SQLitePCLRaw.core.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\System.Data.SQLite.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\runtimes\linux-x64\native\SQLite.Interop.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\runtimes\osx-x64\native\SQLite.Interop.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\runtimes\win-x64\native\SQLite.Interop.dll
+C:\DATA\TieuLuan_HKII_2024-2025\K68_HTTT.237480104020.NguyenVanQuoc.ASP\QuanLyTHPT\QuanLyTHPT\obj\Release\net8.0\PubTmp\Out\runtimes\win-x86\native\SQLite.Interop.dll

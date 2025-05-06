@@ -1,0 +1,518 @@
+﻿@page
+@model QuanLyTHPT.Pages.Admin.QuanLyTaiKhoanModel
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e90ff;
+        }
+
+        .main-content {
+            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #CFEBFC;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 28px;
+                color: #ff4500;
+            }
+
+            .header h2 {
+                margin: 5px 0 0 0;
+                font-size: 20px;
+                color: #1e90ff;
+            }
+
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .button-group-left,
+        .button-group-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            --color: #fff;
+            --color-hover: #fff;
+            padding: 8px 28px;
+            border-radius: 20px;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            color: var(--c, var(--color));
+            background: var(--b, var(--background));
+            transition: color .2s linear var(--c-d, .2s), background .3s linear var(--b-d, .2s);
+        }
+
+            .btn:not(.simple) {
+                &:before, &:after
+
+        {
+            content: '';
+            position: absolute;
+            background: var(--pb, var(--hover-back));
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200%;
+            border-radius: var(--br, 40%);
+            transform: translateY(var(--y, 50%));
+            transition: transform var(--d, .4s) ease-in var(--d-d, 0s), border-radius .5s ease var(--br-d, .08s);
+        }
+
+        &:after {
+            --pb: var(--hover-front);
+            --d: .44s;
+        }
+
+        }
+
+        .btn div {
+            z-index: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn.in:not(.out) {
+            --c: var(--color-hover);
+            --b: var(--background-hover);
+        }
+
+            .btn.in:not(.out):before,
+            .btn.in:not(.out):after {
+                --y: 0;
+                --br: 5%;
+            }
+
+            .btn.in:not(.out):after {
+                --br: 10%;
+                --d-d: .02s;
+            }
+
+        .btn-add {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-back {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+        }
+
+        .btn-submit {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-edit {
+            --background: #32cd32;
+            --background-hover: #28a428;
+            --hover-back: #2ea22e;
+            --hover-front: #4cd14c;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .btn-delete {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .table-container table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 12px 15px;
+                text-align: left;
+                font-size: 13px;
+            }
+
+            .table-container th {
+                background-color: #1a3c34;
+                color: white;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+            }
+
+            .table-container td {
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .table-container tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-container tr:hover {
+                background-color: #f5f5f5;
+                cursor: pointer;
+            }
+
+            .table-container th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            .table-container th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            .table-container tr:last-child td:first-child {
+                border-bottom-left-radius: 10px;
+            }
+
+            .table-container tr:last-child td:last-child {
+                border-bottom-right-radius: 10px;
+            }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 500px;
+            max-width: 90%;
+            position: relative;
+        }
+
+            .modal-content h2 {
+                margin-top: 0;
+                text-align: center;
+                color: #ff0000;
+            }
+
+            .modal-content p {
+                text-align: center;
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+            .modal-content form {
+                display: grid;
+                gap: 15px;
+            }
+
+            .modal-content label {
+                font-weight: bold;
+            }
+
+            .modal-content input,
+            .modal-content select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="header">
+            <h1>BỘ GIÁO DỤC & ĐÀO TẠO</h1>
+            <h2>CÔNG CỤ QUẢN LÝ TÀI KHOẢN</h2>
+        </div>
+
+        <div class="container">
+            @if (TempData["Message"] != null)
+            {
+                <div style="color: green; text-align: center; margin-bottom: 10px;">
+                    @TempData["Message"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div style="color: red; text-align: center; margin-bottom: 10px;">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <div class="button-row">
+                <div class="button-group-left">
+                    <form method="post">
+                        <button class="btn btn-back" asp-page-handler="Back">Quay lại trang chủ</button>
+                    </form>
+                </div>
+                <div class="button-group-right">
+                    <button class="btn btn-add" onclick="openAddTaiKhoanModal()">Thêm tài khoản</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên người dùng</th>
+                            <th>Mật khẩu</th>
+                            <th>Quyền truy cập</th>
+                            <th>Email</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TaiKhoanList != null && Model.TaiKhoanList.Any())
+                        {
+                            @foreach (var taiKhoan in Model.TaiKhoanList)
+                            {
+                                <tr>
+                                    <td>@taiKhoan.TenNguoiDung</td>
+                                    <td>@taiKhoan.MatKhau</td>
+                                    <td>@taiKhoan.QuyenTruyCap</td>
+                                    <td>@taiKhoan.Email</td>
+                                    <td>
+                                        <button class="btn btn-edit" onclick="openEditTaiKhoanModal('@taiKhoan.TenNguoiDung', '@taiKhoan.MatKhau', '@taiKhoan.QuyenTruyCap', '@taiKhoan.Email')">Sửa</button>
+                                        <button class="btn btn-delete" onclick="openDeleteTaiKhoanModal('@taiKhoan.TenNguoiDung')">Xóa</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="addTaiKhoanModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddTaiKhoanModal()">×</span>
+                <h2>THÊM TÀI KHOẢN MỚI</h2>
+                <p>Vui lòng nhập đầy đủ các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="AddTaiKhoan">
+                    <div>
+                        <label for="tenNguoiDung">Tên người dùng:</label>
+                        <input type="text" id="tenNguoiDung" name="tenNguoiDung" required />
+                    </div>
+                    <div>
+                        <label for="matKhau">Mật khẩu:</label>
+                        <input type="text" id="matKhau" name="matKhau" required />
+                    </div>
+                    <div>
+                        <label for="quyenTruyCap">Quyền truy cập:</label>
+                        <select id="quyenTruyCap" name="quyenTruyCap" required>
+                            <option value="" disabled selected>Chọn quyền truy cập</option>
+                            <option value="admin">Admin</option>
+                            <option value="student">Học sinh</option>
+                            <option value="teacher">Giáo viên</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Thêm tài khoản</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="editTaiKhoanModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditTaiKhoanModal()">×</span>
+                <h2>SỬA TÀI KHOẢN</h2>
+                <p>Vui lòng chỉnh sửa các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="EditTaiKhoan">
+                    <input type="hidden" id="editTenNguoiDung" name="tenNguoiDung" />
+                    <div>
+                        <label for="editMatKhau">Mật khẩu:</label>
+                        <input type="text" id="editMatKhau" name="matKhau" required />
+                    </div>
+                    <div>
+                        <label for="editQuyenTruyCap">Quyền truy cập:</label>
+                        <select id="editQuyenTruyCap" name="quyenTruyCap" required>
+                            <option value="" disabled selected>Chọn quyền truy cập</option>
+                            <option value="admin">Admin</option>
+                            <option value="student">Học sinh</option>
+                            <option value="teacher">Giáo viên</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail" name="email" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Cập nhật tài khoản</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="deleteTaiKhoanModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeleteTaiKhoanModal()">×</span>
+                <h2>XÓA TÀI KHOẢN</h2>
+                <p>Nhập tên người dùng cần xóa</p>
+                <form method="post" asp-page-handler="DeleteTaiKhoan">
+                    <div>
+                        <label for="deleteTenNguoiDung">Tên người dùng:</label>
+                        <input type="text" id="deleteTenNguoiDung" name="tenNguoiDung" required readonly />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Xóa tài khoản</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            Bản quyền © 2025 Nguyễn Văn Quốc
+        </div>
+    </div>
+
+    <script>
+        function openAddTaiKhoanModal() {
+            document.getElementById("addTaiKhoanModal").style.display = "flex";
+        }
+
+        function closeAddTaiKhoanModal() {
+            document.getElementById("addTaiKhoanModal").style.display = "none";
+        }
+
+        function openEditTaiKhoanModal(tenNguoiDung, matKhau, quyenTruyCap, email) {
+            document.getElementById("editTenNguoiDung").value = tenNguoiDung;
+            document.getElementById("editMatKhau").value = matKhau;
+            document.getElementById("editQuyenTruyCap").value = quyenTruyCap;
+            document.getElementById("editEmail").value = email;
+            document.getElementById("editTaiKhoanModal").style.display = "flex";
+        }
+
+        function closeEditTaiKhoanModal() {
+            document.getElementById("editTaiKhoanModal").style.display = "none";
+        }
+
+        function openDeleteTaiKhoanModal(tenNguoiDung) {
+            document.getElementById("deleteTenNguoiDung").value = tenNguoiDung;
+            document.getElementById("deleteTaiKhoanModal").style.display = "flex";
+        }
+
+        function closeDeleteTaiKhoanModal() {
+            document.getElementById("deleteTaiKhoanModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var addTaiKhoanModal = document.getElementById("addTaiKhoanModal");
+            var editTaiKhoanModal = document.getElementById("editTaiKhoanModal");
+            var deleteTaiKhoanModal = document.getElementById("deleteTaiKhoanModal");
+            if (event.target == addTaiKhoanModal) {
+                addTaiKhoanModal.style.display = "none";
+            }
+            if (event.target == editTaiKhoanModal) {
+                editTaiKhoanModal.style.display = "none";
+            }
+            if (event.target == deleteTaiKhoanModal) {
+                deleteTaiKhoanModal.style.display = "none";
+            }
+        }
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', e => {
+                if (!button.classList.contains('out')) {
+                    button.classList.add('in');
+                }
+            });
+
+            button.addEventListener('mouseleave', e => {
+                if (button.classList.contains('in')) {
+                    button.classList.add('out');
+                    setTimeout(() => button.classList.remove('in', 'out'), 950);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

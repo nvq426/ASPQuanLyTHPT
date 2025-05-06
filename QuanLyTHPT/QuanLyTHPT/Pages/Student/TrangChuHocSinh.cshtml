@@ -1,0 +1,442 @@
+﻿@page
+@model QuanLyTHPT.Pages.Student.TrangChuHocSinhModel
+@{
+    ViewData["Title"] = "Trang chủ học sinh";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e90ff;
+        }
+
+        .main-content {
+            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #CFEBFC;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 28px;
+                color: #ff4500;
+            }
+
+            .header h2 {
+                margin: 5px 0 0 0;
+                font-size: 20px;
+                color: #1e90ff;
+            }
+
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            --color: #fff;
+            --color-hover: #fff;
+            padding: 8px 28px;
+            border-radius: 20px;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            color: var(--c, var(--color));
+            background: var(--b, var(--background));
+            transition: color .2s linear var(--c-d, .2s), background .3s linear var(--b-d, .2s);
+        }
+
+            .btn:not(.simple) {
+                &:before, &:after
+
+        {
+            content: '';
+            position: absolute;
+            background: var(--pb, var(--hover-back));
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200%;
+            border-radius: var(--br, 40%);
+            transform: translateY(var(--y, 50%));
+            transition: transform var(--d, .4s) ease-in var(--d-d, 0s), border-radius .5s ease var(--br-d, .08s);
+        }
+
+        &:after {
+            --pb: var(--hover-front);
+            --d: .44s;
+        }
+
+        }
+
+        .btn div {
+            z-index: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn.in:not(.out) {
+            --c: var(--color-hover);
+            --b: var(--background-hover);
+        }
+
+            .btn.in:not(.out):before,
+            .btn.in:not(.out):after {
+                --y: 0;
+                --br: 5%;
+            }
+
+            .btn.in:not(.out):after {
+                --br: 10%;
+                --d-d: .02s;
+            }
+
+        .btn-back {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+        }
+
+        .filter-bar {
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .filter-bar form {
+                display: flex;
+                width: auto;
+                align-items: center;
+            }
+
+            .filter-bar select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                font-size: 16px;
+                box-sizing: border-box;
+                width: 200px;
+            }
+
+            .filter-bar button {
+                --background: #1e90ff;
+                --background-hover: #1873cc;
+                --hover-back: #2a7cd9;
+                --hover-front: #4ca5ff;
+                padding: 8px 15px;
+                color: var(--c, var(--color));
+                background: var(--b, var(--background));
+            }
+
+        .student-info {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+            .student-info h3 {
+                margin-top: 0;
+                color: #ff4500;
+                text-align: center;
+            }
+
+            .student-info p {
+                margin: 5px 0;
+                font-size: 16px;
+                text-align: left;
+            }
+
+            .student-info .info-label {
+                font-weight: bold;
+                color: #1a3c34;
+            }
+
+            .student-info .logout-button {
+                margin-top: 10px;
+                text-align: center;
+            }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .table-container table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 12px 15px;
+                text-align: left;
+                font-size: 13px;
+            }
+
+            .table-container th {
+                background-color: #1a3c34;
+                color: white;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+            }
+
+            .table-container td {
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .table-container tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-container tr:hover {
+                background-color: #f5f5f5;
+                cursor: pointer;
+            }
+
+            .table-container th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            .table-container th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            .table-container tr:last-child td:first-child {
+                border-bottom-left-radius: 10px;
+            }
+
+            .table-container tr:last-child td:last-child {
+                border-bottom-right-radius: 10px;
+            }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="header">
+            <h1>TRƯỜNG TRUNG HỌC PHỔ THÔNG XUÂN LỘC - ĐỒNG NAI</h1>
+            <h2>TRANG CHỦ TRA CỨU ĐIỂM HỌC SINH</h2>
+        </div>
+
+        <div class="container">
+            <div class="student-info">
+                <h3>THÔNG TIN HỌC SINH</h3>
+                @if (Model.HocSinh != null)
+                {
+                    <p><span class="info-label">Mã học sinh:</span> @Model.HocSinh.IdHocSinh</p>
+                    <p><span class="info-label">Họ và tên:</span> @Model.HocSinh.HoVaTen</p>
+                    <p><span class="info-label">Lớp:</span> @Model.LopTen</p>
+                    <p><span class="info-label">Giới tính:</span> @Model.HocSinh.GioiTinh</p>
+                    <p><span class="info-label">Ngày sinh:</span> @Model.HocSinh.NgaySinh</p>
+                    <p><span class="info-label">Năm nhập học:</span> @Model.HocSinh.NamNhapHoc</p>
+                    <p><span class="info-label">Số điện thoại:</span> @Model.HocSinh.Sdt</p>
+                    <p><span class="info-label">Địa chỉ:</span> @Model.HocSinh.DiaChi</p>
+                    <div class="logout-button">
+                        <form method="post" style="display: inline;">
+                            <button class="btn btn-back" asp-page-handler="Logout">Đăng xuất</button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <p style="color: red; text-align: center;">Không tìm thấy thông tin học sinh!</p>
+                }
+            </div>
+
+            <div class="filter-bar">
+                <form method="post">
+                    <select name="maMonHocFilter" onchange="this.form.submit()">
+                        @{
+                            var monHocOptions = new Dictionary<int, string>
+                        {
+                        { 0, "Tất cả mã môn học" }
+                        };
+                            if (Model.MonHocList != null)
+                            {
+                                foreach (var monHoc in Model.MonHocList)
+                                {
+                                    monHocOptions[monHoc.MaMonHoc] = $"{monHoc.MaMonHoc} - {monHoc.TenMonHoc}";
+                                }
+                            }
+
+                            foreach (var option in monHocOptions)
+                            {
+                                if (Model.MaMonHocFilter == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <select name="lopFilter" onchange="this.form.submit()">
+                        @{
+                            var lopOptions = new Dictionary<string, string>
+                        {
+                        { "", "Tất cả lớp" },
+                        { "10", "Lớp 10" },
+                        { "11", "Lớp 11" },
+                        { "12", "Lớp 12" }
+                        };
+
+                            foreach (var option in lopOptions)
+                            {
+                                if (Model.LopFilter == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <select name="hocKyFilter" onchange="this.form.submit()">
+                        @{
+                            var hocKyOptions = new Dictionary<string, string>
+                        {
+                        { "", "Cả năm" },
+                        { "1", "Học kỳ 1" },
+                        { "2", "Học kỳ 2" }
+                        };
+
+                            foreach (var option in hocKyOptions)
+                            {
+                                if (Model.HocKyFilter == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <button type="submit" class="btn" asp-page-handler="Filter">Lọc</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã môn học</th>
+                            <th>Tên môn học</th>
+                            <th>Lớp</th>
+                            <th>Học kỳ</th>
+                            <th>TX1</th>
+                            <th>TX2</th>
+                            <th>TX3</th>
+                            <th>TX4</th>
+                            <th>TX5</th>
+                            <th>GK</th>
+                            <th>Thi</th>
+                            <th>TB</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.DiemSoList != null && Model.DiemSoList.Any())
+                        {
+                            @foreach (var diemSo in Model.DiemSoList)
+                            {
+                                <tr>
+                                    <td>@diemSo.MaMonHoc</td>
+                                    <td>@diemSo.TenMonHoc</td>
+                                    <td>@diemSo.Lop</td>
+                                    <td>@diemSo.HocKy</td>
+                                    <td>@diemSo.DiemThuongXuyen1</td>
+                                    <td>@diemSo.DiemThuongXuyen2</td>
+                                    <td>@diemSo.DiemThuongXuyen3</td>
+                                    <td>@diemSo.DiemThuongXuyen4</td>
+                                    <td>@diemSo.DiemThuongXuyen5</td>
+                                    <td>@diemSo.DiemGiuaKy</td>
+                                    <td>@diemSo.DiemThi</td>
+                                    <td>@diemSo.DiemTB</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="12">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            Bản quyền © 2025 Nguyễn Văn Quốc
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', e => {
+                if (!button.classList.contains('out')) {
+                    button.classList.add('in');
+                }
+            });
+
+            button.addEventListener('mouseleave', e => {
+                if (button.classList.contains('in')) {
+                    button.classList.add('out');
+                    setTimeout(() => button.classList.remove('in', 'out'), 950);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

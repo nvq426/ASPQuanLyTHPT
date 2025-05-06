@@ -1,0 +1,668 @@
+﻿@page
+@model QuanLyTHPT.Pages.Admin.QuanLyGiaoVienModel
+@{
+    ViewData["Title"] = "Quản lý giáo viên";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e90ff;
+        }
+
+        .main-content {
+            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #CFEBFC;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 28px;
+                color: #ff4500;
+            }
+
+            .header h2 {
+                margin: 5px 0 0 0;
+                font-size: 20px;
+                color: #1e90ff;
+            }
+
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 1400px; /* Tăng độ rộng tối đa để bảng dài hơn */
+            margin: 0 auto;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .button-group-left,
+        .button-group-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            --color: #fff;
+            --color-hover: #fff;
+            padding: 8px 28px;
+            border-radius: 20px;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            color: var(--c, var(--color));
+            background: var(--b, var(--background));
+            transition: color .2s linear var(--c-d, .2s), background .3s linear var(--b-d, .2s);
+        }
+
+            .btn:not(.simple) {
+                &:before, &:after
+
+        {
+            content: '';
+            position: absolute;
+            background: var(--pb, var(--hover-back));
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200%;
+            border-radius: var(--br, 40%);
+            transform: translateY(var(--y, 50%));
+            transition: transform var(--d, .4s) ease-in var(--d-d, 0s), border-radius .5s ease var(--br-d, .08s);
+        }
+
+        &:after {
+            --pb: var(--hover-front);
+            --d: .44s;
+        }
+
+        }
+
+        .btn div {
+            z-index: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn.in:not(.out) {
+            --c: var(--color-hover);
+            --b: var(--background-hover);
+        }
+
+            .btn.in:not(.out):before,
+            .btn.in:not(.out):after {
+                --y: 0;
+                --br: 5%;
+            }
+
+            .btn.in:not(.out):after {
+                --br: 10%;
+                --d-d: .02s;
+            }
+
+        .btn-add {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-export {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-back {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+        }
+
+        .btn-submit {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-edit {
+            --background: #32cd32;
+            --background-hover: #28a428;
+            --hover-back: #2ea22e;
+            --hover-front: #4cd14c;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .btn-delete {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .search-bar form {
+                display: flex;
+                width: 100%;
+                align-items: center;
+            }
+
+            .search-bar input[type="text"] {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                font-size: 16px;
+                box-sizing: border-box;
+            }
+
+            .search-bar button {
+                --background: #1e90ff;
+                --background-hover: #1873cc;
+                --hover-back: #2a7cd9;
+                --hover-front: #4ca5ff;
+                padding: 8px 15px;
+                color: var(--c, var(--color));
+                background: var(--b, var(--background));
+            }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .table-container table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 12px 15px;
+                text-align: left;
+                font-size: 13px; /* Giảm font-size xuống 3px so với mặc định (16px -> 13px) */
+            }
+
+            .table-container th {
+                background-color: #1a3c34;
+                color: white;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+            }
+
+            .table-container td {
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .table-container tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-container tr:hover {
+                background-color: #f5f5f5;
+                cursor: pointer;
+            }
+
+            .table-container th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            .table-container th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            .table-container tr:last-child td:first-child {
+                border-bottom-left-radius: 10px;
+            }
+
+            .table-container tr:last-child td:last-child {
+                border-bottom-right-radius: 10px;
+            }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 500px;
+            max-width: 90%;
+            position: relative;
+        }
+
+            .modal-content h2 {
+                margin-top: 0;
+                text-align: center;
+                color: #ff0000;
+            }
+
+            .modal-content p {
+                text-align: center;
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+            .modal-content form {
+                display: grid;
+                gap: 15px;
+            }
+
+            .modal-content label {
+                font-weight: bold;
+            }
+
+            .modal-content input,
+            .modal-content select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="header">
+            <h1>BỘ GIÁO DỤC & ĐÀO TẠO</h1>
+            <h2>CÔNG CỤ QUẢN LÝ GIÁO VIÊN</h2>
+        </div>
+
+        <div class="container">
+            @if (TempData["Message"] != null)
+            {
+                <div style="color: green; text-align: center; margin-bottom: 10px;">
+                    @TempData["Message"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div style="color: red; text-align: center; margin-bottom: 10px;">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <div class="button-row">
+                <div class="button-group-left">
+                    <form method="post">
+                        <button class="btn btn-back" asp-page-handler="Back">Quay lại trang chủ</button>
+                    </form>
+                </div>
+                <div class="button-group-right">
+                    <button class="btn btn-add" onclick="openAddModal()">Thêm giáo viên</button>
+                    <form method="post" style="display: inline;">
+                        <button class="btn btn-export" asp-page-handler="Export">Xuất danh sách giáo viên</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <form class="search-form" method="post">
+                    <input type="text" name="searchText" placeholder="Tìm kiếm giáo viên..." value="@Model.SearchText" />
+                    <button type="submit" class="btn" asp-page-handler="Search">Tìm kiếm</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Giáo viên</th>
+                            <th>Họ và tên</th>
+                            <th>Giới tính</th>
+                            <th>Ngày sinh</th>
+                            <th>Trình độ</th>
+                            <th>Số điện thoại</th>
+                            <th>Email</th>
+                            <th>Địa chỉ</th>
+                            <th>Bộ môn giảng dạy</th>
+                            <th>Chức vụ</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.GiaoVienList != null && Model.GiaoVienList.Any())
+                        {
+                            @foreach (var giaoVien in Model.GiaoVienList)
+                            {
+                                <tr>
+                                    <td>@giaoVien.IdGiaoVien</td>
+                                    <td>@giaoVien.HoVaTen</td>
+                                    <td>@giaoVien.GioiTinh</td>
+                                    <td>@giaoVien.NgaySinh</td>
+                                    <td>@giaoVien.TrinhDo</td>
+                                    <td>@giaoVien.Sdt</td>
+                                    <td>@giaoVien.Mail</td>
+                                    <td>@giaoVien.DiaChi</td>
+                                    <td>@giaoVien.BoMonGiangDay</td>
+                                    <td>@giaoVien.ChucVu</td>
+                                    <td>
+                                        <button class="btn btn-edit" onclick="openEditModal('@giaoVien.IdGiaoVien', '@giaoVien.HoVaTen', '@giaoVien.GioiTinh', '@giaoVien.NgaySinh', '@giaoVien.TrinhDo', '@giaoVien.Sdt', '@giaoVien.Mail', '@giaoVien.DiaChi', '@giaoVien.BoMonGiangDay', '@giaoVien.ChucVu')">Sửa</button>
+                                        <button class="btn btn-delete" onclick="openDeleteModal('@giaoVien.IdGiaoVien')">Xóa</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="11">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="addGiaoVienModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddModal()">×</span>
+                <h2>THÊM GIÁO VIÊN</h2>
+                <p>Vui lòng nhập đầy đủ các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="AddGiaoVien">
+                    <div>
+                        <label for="idGiaoVien">Mã giáo viên:</label>
+                        <input type="number" id="idGiaoVien" name="idGiaoVien" required />
+                    </div>
+                    <div>
+                        <label for="hoVaTen">Họ và tên:</label>
+                        <input type="text" id="hoVaTen" name="hoVaTen" required />
+                    </div>
+                    <div>
+                        <label for="gioiTinh">Giới tính:</label>
+                        <select id="gioiTinh" name="gioiTinh" required>
+                            <option value="" disabled selected>Chọn giới tính</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ngaySinh">Ngày sinh:</label>
+                        <input type="date" id="ngaySinh" name="ngaySinh" required />
+                    </div>
+                    <div>
+                        <label for="trinhDo">Trình độ:</label>
+                        <select id="trinhDo" name="trinhDo" required>
+                            <option value="" disabled selected>Chọn trình độ</option>
+                            <option value="Đại học">Đại học</option>
+                            <option value="Thạc sĩ">Thạc sĩ</option>
+                            <option value="Tiến sĩ">Tiến sĩ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sdt">Số điện thoại:</label>
+                        <input type="text" id="sdt" name="sdt" required />
+                    </div>
+                    <div>
+                        <label for="mail">Email:</label>
+                        <input type="email" id="mail" name="mail" required />
+                    </div>
+                    <div>
+                        <label for="diaChi">Địa chỉ:</label>
+                        <input type="text" id="diaChi" name="diaChi" required />
+                    </div>
+                    <div>
+                        <label for="boMonGiangDay">Bộ môn giảng dạy:</label>
+                        <select id="boMonGiangDay" name="boMonGiangDay" required>
+                            <option value="" disabled selected>Chọn bộ môn</option>
+                            <option value="Toán">Toán</option>
+                            <option value="Văn">Văn</option>
+                            <option value="Lý">Lý</option>
+                            <option value="Hóa">Hóa</option>
+                            <option value="Sinh">Sinh</option>
+                            <option value="Sử">Sử</option>
+                            <option value="Địa">Địa</option>
+                            <option value="Anh">Anh</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="chucVu">Chức vụ:</label>
+                        <select id="chucVu" name="chucVu" required>
+                            <option value="" disabled selected>Chọn chức vụ</option>
+                            <option value="Giáo viên">Giáo viên</option>
+                            <option value="Tổ trưởng">Tổ trưởng</option>
+                            <option value="Hiệu trưởng">Hiệu trưởng</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-submit">Thêm giáo viên</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="editGiaoVienModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">×</span>
+                <h2>CHỈNH SỬA GIÁO VIÊN</h2>
+                <p>Vui lòng chỉnh sửa các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="EditGiaoVien">
+                    <input type="hidden" id="editIdGiaoVien" name="idGiaoVien" />
+                    <div>
+                        <label for="editHoVaTen">Họ và tên:</label>
+                        <input type="text" id="editHoVaTen" name="hoVaTen" required />
+                    </div>
+                    <div>
+                        <label for="editGioiTinh">Giới tính:</label>
+                        <select id="editGioiTinh" name="gioiTinh" required>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editNgaySinh">Ngày sinh:</label>
+                        <input type="date" id="editNgaySinh" name="ngaySinh" required />
+                    </div>
+                    <div>
+                        <label for="editTrinhDo">Trình độ:</label>
+                        <select id="editTrinhDo" name="trinhDo" required>
+                            <option value="Đại học">Đại học</option>
+                            <option value="Thạc sĩ">Thạc sĩ</option>
+                            <option value="Tiến sĩ">Tiến sĩ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editSdt">Số điện thoại:</label>
+                        <input type="text" id="editSdt" name="sdt" required />
+                    </div>
+                    <div>
+                        <label for="editMail">Email:</label>
+                        <input type="email" id="editMail" name="mail" required />
+                    </div>
+                    <div>
+                        <label for="editDiaChi">Địa chỉ:</label>
+                        <input type="text" id="editDiaChi" name="diaChi" required />
+                    </div>
+                    <div>
+                        <label for="editBoMonGiangDay">Bộ môn giảng dạy:</label>
+                        <select id="editBoMonGiangDay" name="boMonGiangDay" required>
+                            <option value="Toán">Toán</option>
+                            <option value="Văn">Văn</option>
+                            <option value="Lý">Lý</option>
+                            <option value="Hóa">Hóa</option>
+                            <option value="Sinh">Sinh</option>
+                            <option value="Sử">Sử</option>
+                            <option value="Địa">Địa</option>
+                            <option value="Anh">Anh</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editChucVu">Chức vụ:</label>
+                        <select id="editChucVu" name="chucVu" required>
+                            <option value="Giáo viên">Giáo viên</option>
+                            <option value="Tổ trưởng">Tổ trưởng</option>
+                            <option value="Hiệu trưởng">Hiệu trưởng</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-submit">Cập nhật giáo viên</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="deleteGiaoVienModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeleteModal()">×</span>
+                <h2>XÓA GIÁO VIÊN</h2>
+                <p>Nhập mã giáo viên cần xóa</p>
+                <form method="post" asp-page-handler="DeleteGiaoVien">
+                    <div>
+                        <label for="deleteIdGiaoVien">Mã giáo viên:</label>
+                        <input type="number" id="deleteIdGiaoVien" name="idGiaoVien" required readonly />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Xóa giáo viên</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            Bản quyền © 2025 Nguyễn Văn Quốc
+        </div>
+    </div>
+
+    <script>
+        function openAddModal() {
+            document.getElementById("addGiaoVienModal").style.display = "flex";
+        }
+
+        function closeAddModal() {
+            document.getElementById("addGiaoVienModal").style.display = "none";
+        }
+
+        function openEditModal(idGiaoVien, hoVaTen, gioiTinh, ngaySinh, trinhDo, sdt, mail, diaChi, boMonGiangDay, chucVu) {
+            document.getElementById("editIdGiaoVien").value = idGiaoVien;
+            document.getElementById("editHoVaTen").value = hoVaTen;
+            document.getElementById("editGioiTinh").value = gioiTinh;
+            document.getElementById("editNgaySinh").value = ngaySinh.split('/').reverse().join('-'); // Convert dd/MM/yyyy to yyyy-MM-dd
+            document.getElementById("editTrinhDo").value = trinhDo;
+            document.getElementById("editSdt").value = sdt;
+            document.getElementById("editMail").value = mail;
+            document.getElementById("editDiaChi").value = diaChi;
+            document.getElementById("editBoMonGiangDay").value = boMonGiangDay;
+            document.getElementById("editChucVu").value = chucVu;
+            document.getElementById("editGiaoVienModal").style.display = "flex";
+        }
+
+        function closeEditModal() {
+            document.getElementById("editGiaoVienModal").style.display = "none";
+        }
+
+        function openDeleteModal(idGiaoVien) {
+            document.getElementById("deleteIdGiaoVien").value = idGiaoVien;
+            document.getElementById("deleteGiaoVienModal").style.display = "flex";
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteGiaoVienModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var addModal = document.getElementById("addGiaoVienModal");
+            var editModal = document.getElementById("editGiaoVienModal");
+            var deleteModal = document.getElementById("deleteGiaoVienModal");
+            if (event.target == addModal) {
+                addModal.style.display = "none";
+            }
+            if (event.target == editModal) {
+                editModal.style.display = "none";
+            }
+            if (event.target == deleteModal) {
+                deleteModal.style.display = "none";
+            }
+        }
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', e => {
+                if (!button.classList.contains('out')) {
+                    button.classList.add('in');
+                }
+            });
+
+            button.addEventListener('mouseleave', e => {
+                if (button.classList.contains('in')) {
+                    button.classList.add('out');
+                    setTimeout(() => button.classList.remove('in', 'out'), 950);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

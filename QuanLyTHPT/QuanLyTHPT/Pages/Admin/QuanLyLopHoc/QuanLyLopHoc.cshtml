@@ -1,0 +1,722 @@
+﻿@page
+@model QuanLyTHPT.Pages.Admin.QuanLyLopHocModel
+@{
+    ViewData["Title"] = "Quản lý lớp học";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e90ff;
+        }
+
+        .main-content {
+            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #CFEBFC;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 28px;
+                color: #ff4500;
+            }
+
+            .header h2 {
+                margin: 5px 0 0 0;
+                font-size: 20px;
+                color: #1e90ff;
+            }
+
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .button-group-left,
+        .button-group-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            --color: #fff;
+            --color-hover: #fff;
+            padding: 8px 28px;
+            border-radius: 20px;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            color: var(--c, var(--color));
+            background: var(--b, var(--background));
+            transition: color .2s linear var(--c-d, .2s), background .3s linear var(--b-d, .2s);
+        }
+
+            .btn:not(.simple) {
+                &:before, &:after
+
+        {
+            content: '';
+            position: absolute;
+            background: var(--pb, var(--hover-back));
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200%;
+            border-radius: var(--br, 40%);
+            transform: translateY(var(--y, 50%));
+            transition: transform var(--d, .4s) ease-in var(--d-d, 0s), border-radius .5s ease var(--br-d, .08s);
+        }
+
+        &:after {
+            --pb: var(--hover-front);
+            --d: .44s;
+        }
+
+        }
+
+        .btn div {
+            z-index: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn.in:not(.out) {
+            --c: var(--color-hover);
+            --b: var(--background-hover);
+        }
+
+            .btn.in:not(.out):before,
+            .btn.in:not(.out):after {
+                --y: 0;
+                --br: 5%;
+            }
+
+            .btn.in:not(.out):after {
+                --br: 10%;
+                --d-d: .02s;
+            }
+
+        .btn-add {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-add-student {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-export {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-back {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+        }
+
+        .btn-submit {
+            --background: #1e90ff;
+            --background-hover: #1873cc;
+            --hover-back: #2a7cd9;
+            --hover-front: #4ca5ff;
+        }
+
+        .btn-edit {
+            --background: #32cd32;
+            --background-hover: #28a428;
+            --hover-back: #2ea22e;
+            --hover-front: #4cd14c;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .btn-delete {
+            --background: #ff4040;
+            --background-hover: #cc3333;
+            --hover-back: #d93636;
+            --hover-front: #ff5959;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .btn-view-students {
+            --background: #ff9500;
+            --background-hover: #e08500;
+            --hover-back: #ff9f1a;
+            --hover-front: #ffaa33;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .filter-bar {
+            margin-bottom: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .filter-bar form {
+                display: flex;
+                width: 100%;
+                align-items: center;
+            }
+
+            .filter-bar select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                font-size: 16px;
+                box-sizing: border-box;
+                width: 200px;
+            }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .table-container table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 12px 15px;
+                text-align: left;
+                font-size: 13px;
+            }
+
+            .table-container th {
+                background-color: #1a3c34;
+                color: white;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+            }
+
+            .table-container td {
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .table-container tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-container tr:hover {
+                background-color: #f5f5f5;
+                cursor: pointer;
+            }
+
+            .table-container th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            .table-container th:last-child {
+                border-top-right-radius: 10px;
+            }
+
+            .table-container tr:last-child td:first-child {
+                border-bottom-left-radius: 10px;
+            }
+
+            .table-container tr:last-child td:last-child {
+                border-bottom-right-radius: 10px;
+            }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 500px;
+            max-width: 90%;
+            position: relative;
+        }
+
+        .modal-content-wide {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 800px;
+            max-width: 90%;
+            position: relative;
+        }
+
+            .modal-content h2,
+            .modal-content-wide h2 {
+                margin-top: 0;
+                text-align: center;
+                color: #ff0000;
+            }
+
+            .modal-content p,
+            .modal-content-wide p {
+                text-align: center;
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+            .modal-content form,
+            .modal-content-wide form {
+                display: grid;
+                gap: 15px;
+            }
+
+            .modal-content label,
+            .modal-content-wide label {
+                font-weight: bold;
+            }
+
+            .modal-content input,
+            .modal-content select,
+            .modal-content-wide input,
+            .modal-content-wide select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+            .close:hover {
+                color: #000;
+            }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="header">
+            <h1>BỘ GIÁO DỤC & ĐÀO TẠO</h1>
+            <h2>CÔNG CỤ QUẢN LÝ LỚP HỌC</h2>
+        </div>
+
+        <div class="container">
+            @if (TempData["Message"] != null)
+            {
+                <div style="color: green; text-align: center; margin-bottom: 10px;">
+                    @TempData["Message"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div style="color: red; text-align: center; margin-bottom: 10px;">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <div class="button-row">
+                <div class="button-group-left">
+                    <form method="post">
+                        <button class="btn btn-back" asp-page-handler="Back">Quay lại trang chủ</button>
+                    </form>
+                </div>
+                <div class="button-group-right">
+                    <button class="btn btn-add" onclick="openAddLopHocModal()">Thêm lớp học mới</button>
+                    <button class="btn btn-add-student" onclick="openAddHocSinhModal()">Thêm học sinh vào lớp</button>
+                    <form method="post" style="display: inline;">
+                        <button class="btn btn-export" asp-page-handler="Export">Xuất danh sách ra file</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <form method="post" asp-page-handler="Filter">
+                    <select name="boLoc" onchange="this.form.submit()">
+                        @{
+                            var options = new Dictionary<string, string>
+                        {
+                        { "0", "Tất cả" },
+                        { "10", "Khối 10" },
+                        { "11", "Khối 11" },
+                        { "12", "Khối 12" }
+                        };
+
+                            foreach (var option in options)
+                            {
+                                if (Model.BoLoc == option.Key)
+                                {
+                                    <option value="@option.Key" selected>@option.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@option.Key">@option.Value</option>
+                                }
+                            }
+                        }
+                    </select>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Lớp học</th>
+                            <th>Tên lớp</th>
+                            <th>Sĩ số lớp</th>
+                            <th>Tên giáo viên chủ nhiệm</th>
+                            <th>Mã giáo viên chủ nhiệm</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LopHocList != null && Model.LopHocList.Any())
+                        {
+                            @foreach (var lopHoc in Model.LopHocList)
+                            {
+                                <tr>
+                                    <td>@lopHoc.IdLopHoc</td>
+                                    <td>@lopHoc.TenLop</td>
+                                    <td>@lopHoc.SiSoLop</td>
+                                    <td>@lopHoc.TenGiaoVien</td>
+                                    <td>@lopHoc.IdGiaoVien</td>
+                                    <td>
+                                        <button class="btn btn-edit" onclick="openEditLopHocModal('@lopHoc.IdLopHoc', '@lopHoc.TenLop', '@lopHoc.IdGiaoVien')">Sửa</button>
+                                        <button class="btn btn-delete" onclick="openDeleteLopHocModal('@lopHoc.IdLopHoc')">Xóa</button>
+                                        <button class="btn btn-view-students" onclick="openViewStudentsModal(@lopHoc.IdLopHoc)">Xem danh sách học sinh</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="addLopHocModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddLopHocModal()">×</span>
+                <h2>THÊM LỚP HỌC MỚI</h2>
+                <p>Vui lòng nhập đầy đủ các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="AddLopHoc">
+                    <div>
+                        <label for="idLopHoc">ID Lớp học:</label>
+                        <input type="number" id="idLopHoc" name="idLopHoc" required />
+                    </div>
+                    <div>
+                        <label for="tenLop">Tên lớp:</label>
+                        <input type="text" id="tenLop" name="tenLop" required />
+                    </div>
+                    <div>
+                        <label for="idGiaoVien">Mã giáo viên chủ nhiệm:</label>
+                        <input type="number" id="idGiaoVien" name="idGiaoVien" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Thêm lớp học</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="editLopHocModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditLopHocModal()">×</span>
+                <h2>SỬA LỚP HỌC</h2>
+                <p>Vui lòng chỉnh sửa các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="EditLopHoc">
+                    <input type="hidden" id="editIdLopHoc" name="idLopHoc" />
+                    <div>
+                        <label for="editTenLop">Tên lớp:</label>
+                        <input type="text" id="editTenLop" name="tenLop" required />
+                    </div>
+                    <div>
+                        <label for="editIdGiaoVien">Mã giáo viên chủ nhiệm:</label>
+                        <input type="number" id="editIdGiaoVien" name="idGiaoVien" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Cập nhật lớp học</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="deleteLopHocModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeleteLopHocModal()">×</span>
+                <h2>XÓA LỚP HỌC</h2>
+                <p>Nhập ID lớp học cần xóa</p>
+                <form method="post" asp-page-handler="DeleteLopHoc">
+                    <div>
+                        <label for="deleteIdLopHoc">ID Lớp học:</label>
+                        <input type="number" id="deleteIdLopHoc" name="idLopHoc" required readonly />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Xóa lớp học</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="addHocSinhModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddHocSinhModal()">×</span>
+                <h2>THÊM HỌC SINH VÀ SẮP LỚP</h2>
+                <p>Vui lòng nhập đầy đủ các trường dữ liệu bên dưới</p>
+                <form method="post" asp-page-handler="AddHocSinh">
+                    <div>
+                        <label for="idHocSinh">Mã học sinh:</label>
+                        <input type="number" id="idHocSinh" name="idHocSinh" required />
+                    </div>
+                    <div>
+                        <label for="hoVaTen">Họ và tên:</label>
+                        <input type="text" id="hoVaTen" name="hoVaTen" required />
+                    </div>
+                    <div>
+                        <label for="gioiTinh">Giới tính:</label>
+                        <select id="gioiTinh" name="gioiTinh" required>
+                            <option value="" disabled selected>Chọn giới tính</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ngaySinh">Ngày sinh:</label>
+                        <input type="date" id="ngaySinh" name="ngaySinh" required />
+                    </div>
+                    <div>
+                        <label for="namNhapHoc">Năm nhập học:</label>
+                        <input type="number" id="namNhapHoc" name="namNhapHoc" required />
+                    </div>
+                    <div>
+                        <label for="maLop">Thêm vào lớp (Nhập mã lớp):</label>
+                        <input type="number" id="maLop" name="maLop" required />
+                    </div>
+                    <div>
+                        <label for="sdt">Số điện thoại:</label>
+                        <input type="text" id="sdt" name="sdt" required />
+                    </div>
+                    <div>
+                        <label for="diaChi">Địa chỉ:</label>
+                        <input type="text" id="diaChi" name="diaChi" required />
+                    </div>
+                    <button type="submit" class="btn btn-submit">Thêm học sinh và sắp vào lớp</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="viewStudentsModal" class="modal">
+            <div class="modal-content-wide">
+                <span class="close" onclick="closeViewStudentsModal()">×</span>
+                <h2>DANH SÁCH HỌC SINH</h2>
+                <p>Danh sách học sinh thuộc lớp <span id="lopHocId"></span></p>
+                <div class="table-container">
+                    <table id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>ID Học sinh</th>
+                                <th>Họ và tên</th>
+                                <th>Giới tính</th>
+                                <th>Ngày sinh</th>
+                                <th>Năm nhập học</th>
+                                <th>Mã lớp</th>
+                                <th>Số điện thoại</th>
+                                <th>Địa chỉ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Dữ liệu học sinh sẽ được thêm bằng JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Bản quyền © 2025 Nguyễn Văn Quốc
+        </div>
+    </div>
+
+    <script>
+        // Truyền danh sách học sinh từ backend vào JavaScript
+        const studentsByLopHoc = @Html.Raw(Json.Serialize(Model.StudentsByLopHoc));
+
+        function openAddLopHocModal() {
+            document.getElementById("addLopHocModal").style.display = "flex";
+        }
+
+        function closeAddLopHocModal() {
+            document.getElementById("addLopHocModal").style.display = "none";
+        }
+
+        function openEditLopHocModal(idLopHoc, tenLop, idGiaoVien) {
+            document.getElementById("editIdLopHoc").value = idLopHoc;
+            document.getElementById("editTenLop").value = tenLop;
+            document.getElementById("editIdGiaoVien").value = idGiaoVien;
+            document.getElementById("editLopHocModal").style.display = "flex";
+        }
+
+        function closeEditLopHocModal() {
+            document.getElementById("editLopHocModal").style.display = "none";
+        }
+
+        function openDeleteLopHocModal(idLopHoc) {
+            document.getElementById("deleteIdLopHoc").value = idLopHoc;
+            document.getElementById("deleteLopHocModal").style.display = "flex";
+        }
+
+        function closeDeleteLopHocModal() {
+            document.getElementById("deleteLopHocModal").style.display = "none";
+        }
+
+        function openAddHocSinhModal() {
+            document.getElementById("addHocSinhModal").style.display = "flex";
+        }
+
+        function closeAddHocSinhModal() {
+            document.getElementById("addHocSinhModal").style.display = "none";
+        }
+
+        function openViewStudentsModal(idLopHoc) {
+            document.getElementById("lopHocId").textContent = idLopHoc;
+            document.getElementById("viewStudentsModal").style.display = "flex";
+
+            const tableBody = document.getElementById("studentsTableBody");
+            tableBody.innerHTML = '';
+
+            const students = studentsByLopHoc[idLopHoc];
+            if (!students || students.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="8">Không có học sinh nào trong lớp này</td></tr>';
+                return;
+            }
+
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.idHocSinh}</td>
+                    <td>${student.hoVaTen}</td>
+                    <td>${student.gioiTinh}</td>
+                    <td>${student.ngaySinh}</td>
+                    <td>${student.namNhapHoc}</td>
+                    <td>${student.maLop}</td>
+                    <td>${student.sdt}</td>
+                    <td>${student.diaChi}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function closeViewStudentsModal() {
+            document.getElementById("viewStudentsModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var addLopHocModal = document.getElementById("addLopHocModal");
+            var editLopHocModal = document.getElementById("editLopHocModal");
+            var deleteLopHocModal = document.getElementById("deleteLopHocModal");
+            var addHocSinhModal = document.getElementById("addHocSinhModal");
+            var viewStudentsModal = document.getElementById("viewStudentsModal");
+            if (event.target == addLopHocModal) {
+                addLopHocModal.style.display = "none";
+            }
+            if (event.target == editLopHocModal) {
+                editLopHocModal.style.display = "none";
+            }
+            if (event.target == deleteLopHocModal) {
+                deleteLopHocModal.style.display = "none";
+            }
+            if (event.target == addHocSinhModal) {
+                addHocSinhModal.style.display = "none";
+            }
+            if (event.target == viewStudentsModal) {
+                viewStudentsModal.style.display = "none";
+            }
+        }
+
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('mouseenter', e => {
+                if (!button.classList.contains('out')) {
+                    button.classList.add('in');
+                }
+            });
+
+            button.addEventListener('mouseleave', e => {
+                if (button.classList.contains('in')) {
+                    button.classList.add('out');
+                    setTimeout(() => button.classList.remove('in', 'out'), 950);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
